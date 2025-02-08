@@ -1,14 +1,12 @@
 import Validator from '../Validator';
-
-test('valid usernames', () => {
-  expect(Validator.validateUsername('ValidUser')).toBe(true);
-  expect(Validator.validateUsername('User-Name_1')).toBe(true);
-  expect(Validator.validateUsername('Name999')).toBe(true);
-});
-
-test('invalid usernames', () => {
-  expect(Validator.validateUsername('123Invalid')).toBe(false);
-  expect(Validator.validateUsername('_Invalid')).toBe(false);
-  expect(Validator.validateUsername('Invalid-')).toBe(false);
-  expect(Validator.validateUsername('Name9999')).toBe(false);
+test.each([
+  ['validName', true],
+  ['valid_name-123', true],
+  ['123invalid', false], // начинается с цифры
+  ['invalid_', false], // заканчивается на _
+  ['name1234', false], // более 3 цифр подряд
+  ['name-_-name', true],
+  ['na1111me', false], // более 3 цифр подряд
+])('validateUsername(%s) should return %s', (username, expected) => {
+  expect(Validator.validateUsername(username)).toBe(expected);
 });
